@@ -3,3 +3,9 @@ npm-debug.log
 .DS_Store
 
 build/
+
+*.pyc
+const.py
+
+client_secret.json
+.env

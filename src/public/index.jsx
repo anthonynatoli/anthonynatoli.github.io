@@ -13,7 +13,7 @@ const render = (Component, id) => {
     );
 };
 
-render(<App/>, 'app');
+render(<App />, 'app');
 
 if (module.hot) {
     module.hot.accept('./containers/app.jsx', () => {

@@ -1,3 +1,18 @@
+body {
+    margin: 0;
+}
+
 #app {
     font-size: 20;
+
+    .background-image {
+        width: 100%;
+        position: relative;
+        height: 50%;
+        overflow: hidden;
+    }
+
+    .links {
+        position: relative;
+    }
 }
