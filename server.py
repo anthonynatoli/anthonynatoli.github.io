@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import calendar
 import json
 import const
@@ -6,10 +6,40 @@ import const
 from apiclient.discovery import build
 
 app = Flask(__name__)
+bookInfo = []
 
 @app.route('/', methods=['GET'])
 def initialize ():
     return render_template('index.html')
+
+@app.route('/month/<int:month>', methods=['GET'])
+def runningData (month):
+    data = getRunningData(month)
+    ret = [formatRunningObject(x) for x in data['values']]
+    return json.dumps(ret)
+
+@app.route('/books', methods=['GET'])
+def books ():
+    book_ids = ['diAFQgAACAAJ', # Devil in the White City
+    'yxv1LK5gyV4C', # 1984
+    'pWAYDQAAQBAJ', # Good Clean Fun
+    '4rXJDAEACAAJ', # Norse Mythology
+    'xpJHDAAAQBAJ', # The Undoing Project
+    '2NIpDAAAQBAJ', # The Martian
+    'ekWLDQAAQBAJ' # The Signal and the Noise
+    ]
+
+    service = build('books', 'v1', developerKey = const.DEVELOPER_KEY)
+    global bookInfo
+    bookInfo = []
+    batch = service.new_batch_http_request(callback = buildBookList)
+    [batch.add(service.volumes().get(volumeId = book_ids[x])) for x in range(len(book_ids))]
+    response = batch.execute()
+    return json.dumps(bookInfo)
+
+def buildBookList (request_id, response, exception):
+    global bookInfo
+    return bookInfo.append(json.dumps(response))
 
 def getRunningData (monthNum):
     month = calendar.month_name[monthNum]
@@ -21,18 +51,12 @@ def getRunningData (monthNum):
     response = request.execute()
     return response
 
-@app.route('/month/<int:month>', methods=['GET'])
-def runningData (month):
-    data = getRunningData(month)
-    ret = [formatObject(x) for x in data['values']]
-    return json.dumps(ret)
-
 # Format response as array of objects:
 #   {
 #       'date': mm/dd/yyyy,
 #       'distance': int
 #   }
-def formatObject (entry):
+def formatRunningObject (entry):
     obj = {}
     obj['date'] = entry[0]
     obj['distance'] = entry[1]
