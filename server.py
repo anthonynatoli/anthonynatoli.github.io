@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, make_response, Response
 import calendar
 import json
 import const
@@ -35,11 +35,17 @@ def books ():
     batch = service.new_batch_http_request(callback = buildBookList)
     [batch.add(service.volumes().get(volumeId = book_ids[x])) for x in range(len(book_ids))]
     response = batch.execute()
-    return json.dumps(bookInfo)
+    # resp = make_response(json.dumps(bookInfo))
+    resp = jsonify(bookInfo)
+    #resp = Response(resp1, status=200, mimetype='application/json')
+    #resp.body = resp1
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Credentials'] = 'true'
+    return resp1
 
 def buildBookList (request_id, response, exception):
     global bookInfo
-    return bookInfo.append(json.dumps(response))
+    return bookInfo.append(response)
 
 def getRunningData (monthNum):
     month = calendar.month_name[monthNum]

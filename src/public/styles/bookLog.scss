@@ -1,0 +1,29 @@
+.cards-container {
+    margin-top: 25px;
+
+    .book-card {
+        border: 1px solid gray;
+        margin-bottom: 30px;
+
+        .title-bar {
+            padding: 6px;
+        }
+
+        .info-container {
+            border-top: 1px solid gray;
+            overflow: auto;
+            max-height: 300px;
+
+            .book-thumbnail {
+                float: left;
+                margin: 12px 16px 16px 12px;
+            }
+
+            .book-summary {
+                max-height: 250px;
+                margin: 10px;
+                overflow: auto;
+            }
+        }
+    }
+}
