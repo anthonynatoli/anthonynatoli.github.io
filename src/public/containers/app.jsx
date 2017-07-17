@@ -21,7 +21,8 @@ class App extends React.Component {
                 page: 'home',
                 props: ''
             },
-            bookList: []
+            bookList: [],
+            runData: {}
         };
 
         this.setContent = this.setContent.bind(this);
@@ -38,13 +39,22 @@ class App extends React.Component {
     componentWillMount() {
         // make request to server, set prop
         console.log('will mount with:', this.state);
-        const req = new Request('http://localhost:5000/books');
-        fetch(req).then(resp => resp.json()).then(resp => {
+        const bookReq = new Request('http://localhost:5000/books');
+        const runReq = new Request('http://localhost:5000/run');
+
+        fetch(bookReq).then(resp => resp.json()).then(resp => {
             this.setState({
                 bookList: resp
             });
             console.log(this.state);
         }, this);
+
+        fetch(runReq).then(resp => resp.json()).then(resp => {
+            this.setState({
+                runData: resp
+            });
+            console.log(this.state);
+        });
     }
     render () {
         const { selectedContent } = this.state;
@@ -58,7 +68,7 @@ class App extends React.Component {
                 </div>
                 <div className="links">
                     <button onClick={this.setContent} data="home">Home</button>
-                    <button onClick={this.setContent} data="run_log">Run log</button>
+                    <button onClick={this.setContent} data="run_log" data-passProps="runData">Run log</button>
                     <button onClick={this.setContent} data="book_log" data-passProps="bookList">Book log</button>
                 </div>
             </div>

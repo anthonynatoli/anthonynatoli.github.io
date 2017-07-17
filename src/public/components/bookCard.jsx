@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 class BookCard extends Component {
     constructor(props) {
@@ -32,7 +32,7 @@ class BookCard extends Component {
         return (
             <div className="book-card">
                 <div className="title-bar" onClick={this.expandCard}>
-                    <div className="title">{book.title}</div>
+                    <div className="title">{name}</div>
                     <div className="authors">{authors}</div>
                 </div>
                 {body}
